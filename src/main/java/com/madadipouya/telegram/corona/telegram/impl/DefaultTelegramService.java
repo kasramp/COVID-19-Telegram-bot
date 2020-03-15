@@ -111,6 +111,10 @@ public class DefaultTelegramService implements TelegramService {
 
     @Override
     public void sendAction(int chatId, ActionType action) {
-        restTemplate.postForEntity(format(BASE_URL, token, SEND_CHAT_ACTION), new ChatAction(chatId, action), String.class);
+        try {
+            restTemplate.postForEntity(format(BASE_URL, token, SEND_CHAT_ACTION), new ChatAction(chatId, action), String.class);
+        } catch(HttpStatusCodeException ex) {
+            logger.warn(ex.getResponseBodyAsString());
+        }
     }
 }
