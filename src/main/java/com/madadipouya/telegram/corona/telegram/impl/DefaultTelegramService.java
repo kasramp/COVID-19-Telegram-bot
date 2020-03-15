@@ -63,17 +63,17 @@ public class DefaultTelegramService implements TelegramService {
     }
 
     @Override
-    public void reply(int to, String text, TextFormat format) {
+    public void reply(long to, String text, TextFormat format) {
         replyInternal(to, 0, text, format, new RemoveKeyboard(), false);
     }
 
     @Override
-    public void askLocation(int to, String text) {
+    public void askLocation(long to, String text) {
         replyInternal(to, 0, text, TextFormat.PLAIN_TEXT, new LocationKeyboard(), false);
     }
 
     @Override
-    public void cancelAction(int to, int messageId) {
+    public void cancelAction(long to, int messageId) {
         replyInternal(to, messageId, CANCEL_MESSAGE, TextFormat.PLAIN_TEXT, new RemoveKeyboard(), false);
     }
 
@@ -99,7 +99,7 @@ public class DefaultTelegramService implements TelegramService {
         }
     }
 
-    private void replyInternal(int to, int messageId, String text, TextFormat format, Keyboard keyboard, boolean disablePagePreview) {
+    private void replyInternal(long to, int messageId, String text, TextFormat format, Keyboard keyboard, boolean disablePagePreview) {
         try {
             restTemplate.postForEntity(format(BASE_URL, token, SEND_MESSAGE), new ReplyMessage(to, messageId, text, format, keyboard, disablePagePreview), String.class);
         } catch (HttpStatusCodeException ex) {
@@ -110,7 +110,7 @@ public class DefaultTelegramService implements TelegramService {
     }
 
     @Override
-    public void sendAction(int chatId, ActionType action) {
+    public void sendAction(long chatId, ActionType action) {
         try {
             restTemplate.postForEntity(format(BASE_URL, token, SEND_CHAT_ACTION), new ChatAction(chatId, action), String.class);
         } catch(HttpStatusCodeException ex) {

@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 public class Chat implements Serializable {
 
-    private int id;
+    private long id;
 
     // TODO Replace with enum 'Type of chat, can be either “private”, “group”, “supergroup” or “channel”'
     private String type;
@@ -56,7 +56,7 @@ public class Chat implements Serializable {
     @JsonProperty("can_set_sticker_set")
     private boolean stickerSetAssignable;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

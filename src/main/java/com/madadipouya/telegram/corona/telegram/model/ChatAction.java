@@ -22,16 +22,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ChatAction {
 
     @JsonProperty("chat_id")
-    private int chatId;
+    private long chatId;
 
     private ActionType action;
 
-    public ChatAction(int chatId, ActionType action) {
+    public ChatAction(long chatId, ActionType action) {
         this.chatId = chatId;
         this.action = action;
     }
 
-    public int getChatId() {
+    public long getChatId() {
         return chatId;
     }
 

@@ -23,7 +23,7 @@ import com.madadipouya.telegram.corona.telegram.model.keyboards.Keyboard;
 public class ReplyMessage {
 
     @JsonProperty("chat_id")
-    private final int chatId;
+    private final long chatId;
 
     @JsonProperty("reply_to_message_id")
     private final int messageId;
@@ -39,15 +39,15 @@ public class ReplyMessage {
     @JsonProperty("reply_markup")
     private final Keyboard keyboard;
 
-    public ReplyMessage(int chatId, int messageId, String text, TextFormat textFormat) {
+    public ReplyMessage(long chatId, int messageId, String text, TextFormat textFormat) {
         this(chatId, messageId, text, textFormat, null, false);
     }
 
-    public ReplyMessage(int chatId, String text, Keyboard keyboard) {
+    public ReplyMessage(long chatId, String text, Keyboard keyboard) {
         this(chatId, -1, text, TextFormat.PLAIN_TEXT, keyboard, false);
     }
 
-    public ReplyMessage(int chatId, int messageId, String text, TextFormat textFormat,
+    public ReplyMessage(long chatId, int messageId, String text, TextFormat textFormat,
                         Keyboard keyboard, boolean disableWebPagePreview) {
         this.chatId = chatId;
         this.text = text;
@@ -57,7 +57,7 @@ public class ReplyMessage {
         this.disableWebPagePreview = disableWebPagePreview;
     }
 
-    public int getChatId() {
+    public long getChatId() {
         return chatId;
     }
 

@@ -25,15 +25,15 @@ import java.util.List;
 
 public interface TelegramService {
 
-    void reply(int to, String text, TextFormat format);
+    void reply(long to, String text, TextFormat format);
 
-    void askLocation(int to, String text);
+    void askLocation(long to, String text);
 
-    void cancelAction(int to, int messageId);
+    void cancelAction(long to, int messageId);
 
     void replyInlineQuery(String queryId, String title, String text, TextFormat format);
 
     void replyInlineQueryArticles(String queryId, List<InlineQueryResultArticle> results);
 
-    void sendAction(int chatId, ActionType action);
+    void sendAction(long chatId, ActionType action);
 }
