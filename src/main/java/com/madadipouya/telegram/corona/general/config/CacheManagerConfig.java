@@ -46,22 +46,22 @@ public class CacheManagerConfig {
 
         CaffeineCache openStreetCache = new CaffeineCache(OPEN_STREET_CACHE, Caffeine.newBuilder()
                 .maximumSize(1000)
-                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         CaffeineCache coronaAllStatisticsCache = new CaffeineCache(CORONA_ALL_STATISTICS_CACHE, Caffeine.newBuilder()
                 .maximumSize(10)
-                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         CaffeineCache coronaAllStatisticsFlatCache = new CaffeineCache(CORONA_ALL_STATISTICS_FLAT_CACHE, Caffeine.newBuilder()
                 .maximumSize(10)
-                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         CaffeineCache coronaCountryStatisticsCache = new CaffeineCache(CORONA_COUNTRY_STATISTICS_CACHE, Caffeine.newBuilder()
                 .maximumSize(1000)
-                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         cacheManager.setCaches(List.of(openStreetCache, coronaAllStatisticsCache, coronaAllStatisticsFlatCache, coronaCountryStatisticsCache));
