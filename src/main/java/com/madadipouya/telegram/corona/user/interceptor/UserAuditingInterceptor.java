@@ -33,9 +33,9 @@ import java.util.Objects;
  * © 2020 Kasra Madadipouya <kasra@madadipouya.com>
  */
 
-@Order(-1)
-@Aspect
-@Component
+//@Order(-1)
+//@Aspect
+//@Component
 public class UserAuditingInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(UserAuditingInterceptor.class);
@@ -53,7 +53,7 @@ public class UserAuditingInterceptor {
         this.i18nService = i18nService;
     }
 
-    @Around(value = "execution(* com.madadipouya.telegram.corona.general.rest.TelegramHookController.listen(..)) && args(update)")
+    //@Around(value = "execution(* com.madadipouya.telegram.corona.general.rest.TelegramHookController.listen(..)) && args(update)")
     public void addCommandDetailsToMessage(ProceedingJoinPoint proceedingJoinPoint, Update update) throws Throwable {
         String username = getUsername(update);
         if (userAuditService.isAlreadyBlocked(username)) {
@@ -68,12 +68,14 @@ public class UserAuditingInterceptor {
                         TextFormat.MARK_DOWN);
             }
         } else {
+            logger.info("Username is {}", username);
             userAuditService.log(username);
             proceedingJoinPoint.proceed();
         }
     }
 
     private String getUsername(Update update) {
+        logger.info("Is inline {}", update.hasInlineQuery());
         if (update.hasInlineQuery()) {
             return update.getInlineQuery().getFrom().getUsername();
         }
