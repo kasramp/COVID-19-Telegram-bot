@@ -3,26 +3,18 @@ A Telegram bot to get latest progress on COVID-19
 
 ## Architecture
 
-The project is written based on Spring Boot and uses MySQL version 8.x. 
-No Telegram library, framework or whatsoever is used in this project.
-All the telegram integration is done through direct rest calls.
+The project is written with on Spring Boot. No Telegram library, framework or whatsoever is used in this project.
+All the telegram integration is done through direct REST calls.
 
 ## How to set up the project
 
 ### Prerequisites
 
 - JDK 11
-- Docker and docker-compose
 
 ### Run in local
 
-#### Start docker-compose
-
-Bring the database up using `docker-compose`,
-
-```bash
-$ docker-compose -f docker-compose.yml up -d
-```
+Follow the steps to get it run in local.
 
 #### Add tokens to `application.properties`
 
