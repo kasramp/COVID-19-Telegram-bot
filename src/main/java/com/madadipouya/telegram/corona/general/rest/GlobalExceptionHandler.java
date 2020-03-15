@@ -13,15 +13,13 @@ import java.util.List;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 @RestControllerAdvice
-public class ExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
-    private static final String ERR_UNABLE_TO_PROCESS_REQUEST = "Unable to process the request!";
+public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(value = { Exception.class })
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<CurrentWeatherCondition> unknownException(Exception ex) {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> unknownException(Exception ex) {
         logger.error(getStackTrace(ex));
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(
-                new CurrentWeatherCondition(List.of(ERR_UNABLE_TO_PROCESS_REQUEST)));
+        return ResponseEntity.ok("OK!");
     }
 }
