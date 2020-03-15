@@ -6,6 +6,7 @@ A Telegram bot to get latest progress on COVID-19
 The project is written with on Spring Boot. No Telegram library, framework or whatsoever is used in this project.
 All the telegram integration is done through direct REST calls.
 
+## Data source
 The [@covid19_update_bot](https://telegram.me/covid19_update_bot) bot gets data from [covid-19-api](https://github.com/mathdroid/covid-19-api) created by Muhammad Mustadi. Data is scrapped from [John Hopkins University CSSE](https://coronavirus.jhu.edu/map.html).
 
 ## How to set up the project
