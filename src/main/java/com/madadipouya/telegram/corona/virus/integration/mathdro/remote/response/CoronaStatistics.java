@@ -2,6 +2,8 @@ package com.madadipouya.telegram.corona.virus.integration.mathdro.remote.respons
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import static com.madadipouya.telegram.corona.utils.NumberUtils.formatThreeDecimal;
+
 /*
  * This file is part of COVID-19-Telegram-bot.
  *
@@ -54,6 +56,7 @@ public class CoronaStatistics {
     }
 
     public String getAsString() {
-        return String.format("%s, %s, %s, %s", country, confirmed, deaths, recovered);
+        return String.format("%s, %s, %s, %s", country, formatThreeDecimal(confirmed),
+                formatThreeDecimal(deaths), formatThreeDecimal(recovered));
     }
 }

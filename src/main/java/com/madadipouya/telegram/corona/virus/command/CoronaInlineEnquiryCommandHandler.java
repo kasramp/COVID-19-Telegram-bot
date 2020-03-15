@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.madadipouya.telegram.corona.utils.NumberUtils.formatThreeDecimal;
+
 /*
  * This file is part of COVID-19-Telegram-bot.
  *
@@ -63,8 +65,9 @@ public class CoronaInlineEnquiryCommandHandler {
 
     private String constructDescription(CoronaStatistics coronaStatistics) {
         return String.format("*Country:* %s %n*Confirmed:* %s %n*Deaths:* %s %n*Recovered:* %s",
-                coronaStatistics.getCountry(), coronaStatistics.getConfirmed(),
-                coronaStatistics.getDeaths(), coronaStatistics.getRecovered());
+                coronaStatistics.getCountry(), formatThreeDecimal(coronaStatistics.getConfirmed()),
+                formatThreeDecimal(coronaStatistics.getDeaths()),
+                formatThreeDecimal(coronaStatistics.getRecovered()));
     }
 
     private String getLatestCoronaVirusDevelopmentStatistics() {
