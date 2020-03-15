@@ -91,10 +91,9 @@ The rest of the process is more or less similar to run the project in local.
 - In production profile, swagger-ui is disabled.
 - Only API calls that come from Telegram servers are accepted, the rest is ignored, see `SecurityConfig.java`.
 
-## Donate
-You can always support, show appreciation by buying a cup of coffee :-)
+## Support
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=C68PYFWLT332S)
+Check my site [@geekyhacker.com](https://geekyhacker.com)
 
 ## Contact
 * kasra@madadipouya.com
