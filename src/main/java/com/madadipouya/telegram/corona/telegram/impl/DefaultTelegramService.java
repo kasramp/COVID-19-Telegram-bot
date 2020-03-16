@@ -64,17 +64,17 @@ public class DefaultTelegramService implements TelegramService {
 
     @Override
     public void reply(long to, String text, TextFormat format) {
-        replyInternal(to, 0, text, format, new RemoveKeyboard(), false);
+        replyInternal(to, 0, text, format, new RemoveKeyboard());
     }
 
     @Override
     public void askLocation(long to, String text) {
-        replyInternal(to, 0, text, TextFormat.PLAIN_TEXT, new LocationKeyboard(), false);
+        replyInternal(to, 0, text, TextFormat.PLAIN_TEXT, new LocationKeyboard());
     }
 
     @Override
     public void cancelAction(long to, int messageId) {
-        replyInternal(to, messageId, CANCEL_MESSAGE, TextFormat.PLAIN_TEXT, new RemoveKeyboard(), false);
+        replyInternal(to, messageId, CANCEL_MESSAGE, TextFormat.PLAIN_TEXT, new RemoveKeyboard());
     }
 
     @Override
@@ -99,9 +99,9 @@ public class DefaultTelegramService implements TelegramService {
         }
     }
 
-    private void replyInternal(long to, int messageId, String text, TextFormat format, Keyboard keyboard, boolean disablePagePreview) {
+    private void replyInternal(long to, int messageId, String text, TextFormat format, Keyboard keyboard) {
         try {
-            restTemplate.postForEntity(format(BASE_URL, token, SEND_MESSAGE), new ReplyMessage(to, messageId, text, format, keyboard, disablePagePreview), String.class);
+            restTemplate.postForEntity(format(BASE_URL, token, SEND_MESSAGE), new ReplyMessage(to, messageId, text, format, keyboard, true), String.class);
         } catch (HttpStatusCodeException ex) {
             logger.error("Got error while sending sending edit reply message.");
             logger.error("Message = {}", text);
