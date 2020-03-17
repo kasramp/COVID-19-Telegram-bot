@@ -32,8 +32,12 @@ public class CoronaStatistics {
 
     private int deaths;
 
-    public CoronaStatistics(String country, int confirmed, int recovered, int deaths) {
+    @JsonProperty("iso2")
+    private String countryCode;
+
+    public CoronaStatistics(String country, String countryCode, int confirmed, int recovered, int deaths) {
         this.country = country;
+        this.countryCode = countryCode;
         this.confirmed = confirmed;
         this.recovered = recovered;
         this.deaths = deaths;
@@ -41,6 +45,10 @@ public class CoronaStatistics {
 
     public String getCountry() {
         return country;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 
     public int getConfirmed() {

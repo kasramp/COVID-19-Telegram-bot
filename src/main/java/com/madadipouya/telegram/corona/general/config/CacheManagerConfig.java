@@ -1,12 +1,17 @@
 package com.madadipouya.telegram.corona.general.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheManagerConfig {
 
+    private final Logger logger = LoggerFactory.getLogger(CacheManagerConfig.class);
+
     public static final String OPEN_STREET_CACHE = "openStreetCache";
 
     public static final String CORONA_ALL_STATISTICS_CACHE = "coronaAllStatisticsCache";
@@ -51,20 +58,24 @@ public class CacheManagerConfig {
 
         CaffeineCache coronaAllStatisticsCache = new CaffeineCache(CORONA_ALL_STATISTICS_CACHE, Caffeine.newBuilder()
                 .maximumSize(10)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         CaffeineCache coronaAllStatisticsFlatCache = new CaffeineCache(CORONA_ALL_STATISTICS_FLAT_CACHE, Caffeine.newBuilder()
                 .maximumSize(10)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         CaffeineCache coronaCountryStatisticsCache = new CaffeineCache(CORONA_COUNTRY_STATISTICS_CACHE, Caffeine.newBuilder()
                 .maximumSize(1000)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build());
 
         cacheManager.setCaches(List.of(openStreetCache, coronaAllStatisticsCache, coronaAllStatisticsFlatCache, coronaCountryStatisticsCache));
         return cacheManager;
+    }
+
+    // run every 30 minutes
+    @Scheduled(cron = "0 0/30 * * * ?")
+    @CacheEvict(value = {CORONA_ALL_STATISTICS_CACHE, CORONA_ALL_STATISTICS_FLAT_CACHE, CORONA_COUNTRY_STATISTICS_CACHE}, allEntries = true)
+    public void evictCoronaCaches() {
+        logger.info("Evicted all Corona caches!");
     }
 }

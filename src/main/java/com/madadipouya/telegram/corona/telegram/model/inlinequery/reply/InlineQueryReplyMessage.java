@@ -39,7 +39,7 @@ public class InlineQueryReplyMessage {
     public InlineQueryReplyMessage(String inlineQueryId, List<InlineQueryResultArticle> inlineQueryResult) {
         this.inlineQueryId = inlineQueryId;
         this.results = inlineQueryResult;
-        this.cacheTimeSeconds = 1800;
+        this.cacheTimeSeconds = 120;
     }
 
     public String getInlineQueryId() {

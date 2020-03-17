@@ -3,6 +3,7 @@ package com.madadipouya.telegram.corona.virus.integration.mathdro.impl;
 import com.madadipouya.telegram.corona.virus.integration.mathdro.MathdroIntegration;
 import com.madadipouya.telegram.corona.virus.integration.mathdro.remote.response.CoronaStatistics;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -45,6 +46,9 @@ public class DefaultMathdroIntegration implements MathdroIntegration {
 
     private final RestTemplate restTemplate;
 
+    @Autowired
+    private MathdroIntegration self;
+
     public DefaultMathdroIntegration(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -52,7 +56,7 @@ public class DefaultMathdroIntegration implements MathdroIntegration {
     @Override
     @Cacheable(value = CORONA_ALL_STATISTICS_FLAT_CACHE)
     public List<String> getLatestCoronaStatisticsFlat() {
-        return getLatestCoronaStatistics().stream().map(CoronaStatistics::getAsString).collect(Collectors.toList());
+        return self.getLatestCoronaStatistics().stream().map(CoronaStatistics::getAsString).collect(Collectors.toList());
     }
 
     @Override
@@ -68,7 +72,7 @@ public class DefaultMathdroIntegration implements MathdroIntegration {
         List<CoronaStatistics> coronaStatistics = responseEntity.getBody();
         coronaStatistics.forEach(coronaRecord ->
                 results.merge(coronaRecord.getCountry(), coronaRecord, (v1, v2) ->
-                        new CoronaStatistics(v1.getCountry(),
+                        new CoronaStatistics(v1.getCountry(), v1.getCountryCode(),
                                 v1.getConfirmed() + v2.getConfirmed(),
                                 v1.getRecovered() + v2.getRecovered(),
                                 v1.getDeaths() + v2.getDeaths())));
@@ -80,12 +84,7 @@ public class DefaultMathdroIntegration implements MathdroIntegration {
     @Override
     @Cacheable(value = CORONA_COUNTRY_STATISTICS_CACHE, key = "{ #countryCode }")
     public String getLatestCoronaStatisticsByCountry(String countryCode) {
-        ResponseEntity<List<CoronaStatistics>> responseEntity = restTemplate.exchange(String.format(API_URL_COUNTRY, countryCode), HttpMethod.GET,
-                null, new ParameterizedTypeReference<List<CoronaStatistics>>() {
-                });
-        if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
-            return StringUtils.EMPTY;
-        }
-        return responseEntity.getBody().get(0).getAsString();
+        return self.getLatestCoronaStatistics().stream().filter(r -> StringUtils.equalsAnyIgnoreCase(countryCode, r.getCountryCode()))
+                .findFirst().map(CoronaStatistics::getAsString).orElse(StringUtils.EMPTY);
     }
 }
