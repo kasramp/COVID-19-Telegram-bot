@@ -26,6 +26,9 @@ public class CoronaStatistics {
     @JsonProperty("countryRegion")
     private String country;
 
+    @JsonProperty("provinceState")
+    private String state;
+
     private int confirmed;
 
     private int recovered;
@@ -45,6 +48,10 @@ public class CoronaStatistics {
 
     public String getCountry() {
         return country;
+    }
+
+    public String getState() {
+        return state;
     }
 
     public String getCountryCode() {

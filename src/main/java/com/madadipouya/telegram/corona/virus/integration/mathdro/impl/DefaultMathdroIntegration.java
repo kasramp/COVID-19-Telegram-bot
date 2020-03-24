@@ -14,11 +14,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.madadipouya.telegram.corona.general.config.CacheManagerConfig.CORONA_ALL_STATISTICS_CACHE;
 import static com.madadipouya.telegram.corona.general.config.CacheManagerConfig.CORONA_ALL_STATISTICS_FLAT_CACHE;
 import static com.madadipouya.telegram.corona.general.config.CacheManagerConfig.CORONA_COUNTRY_STATISTICS_CACHE;
+import static com.madadipouya.telegram.corona.utils.StringUtils.getOrDefaultEmpty;
 
 /*
  * This file is part of COVID-19-Telegram-bot.
@@ -40,9 +42,9 @@ import static com.madadipouya.telegram.corona.general.config.CacheManagerConfig.
 @Service
 public class DefaultMathdroIntegration implements MathdroIntegration {
 
-    private final String API_URL = "https://covid19.mathdro.id/api/confirmed";
+    private static final String API_URL = "https://covid19.mathdro.id/api/confirmed";
 
-    private final String API_URL_COUNTRY = "https://covid19.mathdro.id/api/countries/%s/confirmed";
+    private static final Set<String> AUTONOMOUS_STATES = Set.of("Hong Kong", "Macau");
 
     private final RestTemplate restTemplate;
 
@@ -70,12 +72,19 @@ public class DefaultMathdroIntegration implements MathdroIntegration {
         }
         Map<String, CoronaStatistics> results = new LinkedHashMap<>();
         List<CoronaStatistics> coronaStatistics = responseEntity.getBody();
-        coronaStatistics.forEach(coronaRecord ->
+        coronaStatistics.forEach(coronaRecord -> {
+            if (AUTONOMOUS_STATES.contains(getOrDefaultEmpty(coronaRecord.getState()))) {
+                results.put(coronaRecord.getState(), new CoronaStatistics(coronaRecord.getState(),
+                        coronaRecord.getCountryCode(), coronaRecord.getConfirmed(), coronaRecord.getRecovered(),
+                        coronaRecord.getDeaths()));
+            } else {
                 results.merge(coronaRecord.getCountry(), coronaRecord, (v1, v2) ->
                         new CoronaStatistics(v1.getCountry(), v1.getCountryCode(),
                                 v1.getConfirmed() + v2.getConfirmed(),
                                 v1.getRecovered() + v2.getRecovered(),
-                                v1.getDeaths() + v2.getDeaths())));
+                                v1.getDeaths() + v2.getDeaths()));
+            }
+        });
         return results.values().stream()
                 .sorted((o1, o2) -> o1.getConfirmed() < o2.getConfirmed() ? -1 : o1 == o2 || o1.getConfirmed() == o2.getConfirmed() ? 0 : 1)
                 .collect(Collectors.toList());
