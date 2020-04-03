@@ -71,9 +71,13 @@ public class CoronaInlineEnquiryCommandHandler {
     }
 
     private String getLatestCoronaVirusDevelopmentStatistics() {
-        return String.format("%s%n```%n%s%n```%s",
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"),
+        return String.format("```%n%s%n```%s",
+                //i18nService.getMessage("command.corona.virus.latest.statistics.reply"),
                 String.join("\n", mathdroIntegration.getLatestCoronaStatisticsFlat()),
                 i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
+        /*return String.format("%s%n```%n%s%n```%s",
+                i18nService.getMessage("command.corona.virus.latest.statistics.reply"),
+                String.join("\n", mathdroIntegration.getLatestCoronaStatisticsFlat()),
+                i18nService.getMessage("command.corona.virus.latest.statistics.reply"));*/
     }
 }
