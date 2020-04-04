@@ -51,8 +51,20 @@ public class CoronaInlineEnquiryCommandHandler {
 
     public void handle(String id, String query) {
         if (StringUtils.isBlank(query)) {
-            String result = getLatestCoronaVirusDevelopmentStatistics();
-            telegramService.replyInlineQuery(id, "All world", result, TextFormat.MARK_DOWN);
+            StringBuilder replyMessage = new StringBuilder("```");
+            mathdroIntegration.getLatestCoronaStatisticsFlat().forEach(row -> {
+                if(replyMessage.length() > 3800) {
+                    replyMessage.append("\n```");
+                    replyMessage.append(i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
+                    telegramService.replyInlineQuery(id, "All world", replyMessage.toString(), TextFormat.MARK_DOWN);
+                    replyMessage.setLength(0);
+                    replyMessage.append("```");
+                }
+                replyMessage.append(String.format("%n%s",row));
+            });
+            replyMessage.append("\n```");
+            replyMessage.append(i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
+            telegramService.replyInlineQuery(id, "All world", replyMessage.toString(), TextFormat.MARK_DOWN);
         } else {
             List<InlineQueryResultArticle> results = mathdroIntegration.getLatestCoronaStatistics().stream()
                     .filter(r -> StringUtils.startsWithIgnoreCase(r.getCountry(), query)).limit(50)
@@ -68,16 +80,5 @@ public class CoronaInlineEnquiryCommandHandler {
                 coronaStatistics.getCountry(), formatThreeDecimal(coronaStatistics.getConfirmed()),
                 formatThreeDecimal(coronaStatistics.getDeaths()),
                 formatThreeDecimal(coronaStatistics.getRecovered()));
-    }
-
-    private String getLatestCoronaVirusDevelopmentStatistics() {
-        return String.format("```%n%s%n```%s",
-                //i18nService.getMessage("command.corona.virus.latest.statistics.reply"),
-                String.join("\n", mathdroIntegration.getLatestCoronaStatisticsFlat()),
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
-        /*return String.format("%s%n```%n%s%n```%s",
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"),
-                String.join("\n", mathdroIntegration.getLatestCoronaStatisticsFlat()),
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"));*/
     }
 }

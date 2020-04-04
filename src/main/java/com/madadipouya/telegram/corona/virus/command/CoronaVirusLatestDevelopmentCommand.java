@@ -46,21 +46,24 @@ public class CoronaVirusLatestDevelopmentCommand implements BotCommand {
     @Override
     public void execute(Message message, String argument) {
         telegramService.sendAction(message.getChat().getId(), ActionType.TYPING);
-        telegramService.reply(message.getChat().getId(), getLatestCoronaVirusDevelopmentStatistics(), TextFormat.MARK_DOWN);
+        StringBuilder replyMessage = new StringBuilder("```");
+        mathdroIntegration.getLatestCoronaStatisticsFlat().forEach(row -> {
+            if(replyMessage.length() > 3800) {
+                replyMessage.append("\n```");
+                replyMessage.append(i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
+                telegramService.reply(message.getChat().getId(), replyMessage.toString(), TextFormat.MARK_DOWN);
+                replyMessage.setLength(0);
+                replyMessage.append("```");
+            }
+            replyMessage.append(String.format("%n%s",row));
+        });
+        replyMessage.append("\n```");
+        replyMessage.append(i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
+        telegramService.reply(message.getChat().getId(), replyMessage.toString(), TextFormat.MARK_DOWN);
     }
 
     @Override
     public CommandType getSupportedType() {
         return CommandType.CORONA_VIRUS_LATEST;
-    }
-
-    private String getLatestCoronaVirusDevelopmentStatistics() {
-        return String.format("```%n%s%n```%s",
-                String.join("\n", mathdroIntegration.getLatestCoronaStatisticsFlat()),
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"));
-        /*return String.format("%s%n```%n%s%n```%s",
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"),
-                String.join("\n", mathdroIntegration.getLatestCoronaStatisticsFlat()),
-                i18nService.getMessage("command.corona.virus.latest.statistics.reply"));*/
     }
 }
